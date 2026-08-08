@@ -13,9 +13,34 @@
       --bg: #eee5d0;
       --text: #28231c;
       --accent: #a54529;
+      --subtle: #766b56;
+      --scanline: rgba(0,0,0,.09);
+      --glow: rgba(255,255,255,.32);
+      --texture-dark: rgba(40,35,28,.035);
+      --texture-light: rgba(40,35,28,.018);
+      --shadow: rgba(40,35,28,.12);
+      --buffer-bg: rgba(255,255,255,.12);
     }
 
-    * { box-sizing: border-box; }
+    /* Automatically switch to dark mode based on user's device/browser setting */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1916;
+        --text: #eee5d0;
+        --accent: #d06a45;
+        --subtle: #aaa08d;
+        --scanline: rgba(255,255,255,.08);
+        --glow: rgba(255,255,255,.05);
+        --texture-dark: rgba(255,255,255,.025);
+        --texture-light: rgba(255,255,255,.012);
+        --shadow: rgba(0,0,0,.3);
+        --buffer-bg: rgba(255,255,255,.05);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -24,14 +49,15 @@
       place-items: center;
       padding: 24px;
       background:
-        radial-gradient(circle at 50% 45%, rgba(255,255,255,.32), transparent 45%),
-        repeating-linear-gradient(0deg, rgba(40,35,28,.035) 0 1px, transparent 1px 5px),
-        repeating-linear-gradient(90deg, rgba(40,35,28,.018) 0 1px, transparent 1px 7px),
+        radial-gradient(circle at 50% 45%, var(--glow), transparent 45%),
+        repeating-linear-gradient(0deg, var(--texture-dark) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(90deg, var(--texture-light) 0 1px, transparent 1px 7px),
         var(--bg);
       color: var(--text);
       font-family: 'DM Mono', monospace;
       overflow: hidden;
       position: relative;
+      transition: background .3s ease, color .3s ease;
     }
 
     body::after {
@@ -43,7 +69,7 @@
         to bottom,
         transparent 0,
         transparent 3px,
-        rgba(0,0,0,.09) 4px
+        var(--scanline) 4px
       );
       opacity: .45;
     }
@@ -84,7 +110,7 @@
       font-size: clamp(22px, 5vw, 42px);
       line-height: 1.5;
       text-transform: uppercase;
-      text-shadow: 3px 3px 0 rgba(40,35,28,.12);
+      text-shadow: 3px 3px 0 var(--shadow);
     }
 
     .loading {
@@ -101,8 +127,8 @@
       margin-top: 16px;
       padding: 4px;
       border: 2px solid var(--text);
-      background: rgba(255,255,255,.12);
-      box-shadow: 5px 5px 0 rgba(40,35,28,.12);
+      background: var(--buffer-bg);
+      box-shadow: 5px 5px 0 var(--shadow);
     }
 
     .buffer-track {
@@ -133,10 +159,19 @@
 
     .subtle {
       margin-top: 16px;
-      color: #766b56;
+      color: var(--subtle);
       font-size: 10px;
       letter-spacing: .12em;
       text-transform: uppercase;
+    }
+
+    .thanks {
+      margin: 28px auto 0;
+      max-width: 600px;
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.8;
+      letter-spacing: .04em;
     }
 
     .site-footer {
@@ -169,32 +204,66 @@
     }
 
     @keyframes fill {
-      0%, 20% { opacity: .18; transform: scaleY(.7); }
-      40%, 100% { opacity: 1; transform: scaleY(1); }
+      0%, 20% {
+        opacity: .18;
+        transform: scaleY(.7);
+      }
+
+      40%, 100% {
+        opacity: 1;
+        transform: scaleY(1);
+      }
     }
 
     @keyframes appear {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @media (max-width: 520px) {
-      h1 { font-size: 21px; }
-      .buffer { width: 86vw; }
-      .site-header { font-size: 10px; }
-      .site-footer { font-size: 9px; gap: 7px; }
+      h1 {
+        font-size: 21px;
+      }
+
+      .buffer {
+        width: 86vw;
+      }
+
+      .site-header {
+        font-size: 10px;
+      }
+
+      .site-footer {
+        font-size: 9px;
+        gap: 7px;
+      }
+
+      .thanks {
+        font-size: 10px;
+        line-height: 1.7;
+      }
     }
   </style>
 </head>
+
 <body>
   <header class="site-header">Sharad Verma</header>
 
   <main class="page">
     <div class="label">Portfolio</div>
+
     <h1>Work In Progress</h1>
 
     <div class="loading">
       <div>LOADING</div>
+
       <div class="buffer" aria-label="Loading">
         <div class="buffer-track">
           <span></span><span></span><span></span><span></span><span></span>
@@ -204,6 +273,12 @@
     </div>
 
     <div class="subtle">Please wait...</div>
+
+    <div class="thanks">
+      Thank you for taking the time to visit and for showing interest in my portfolio.<br />
+      This website is currently under development and will be launching very soon.<br />
+      See you soon!
+    </div>
   </main>
 
   <footer class="site-footer">

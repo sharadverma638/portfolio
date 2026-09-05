@@ -1,292 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Portfolio under development." />
-  <title>Portfolio — Loading</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Sharad Verma — Portfolio, under construction." />
+<title>Sharad Verma — Portfolio</title>
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Press+Start+2P&display=swap');
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=Fraunces:ital,wght@1,500&display=swap');
 
+  :root {
+    --bg-1: #f7f6f2;
+    --bg-2: #eae6da;
+    --text: #16150f;
+    --muted: #6d6a60;
+    --accent-1: #7c6cf0;
+    --accent-2: #ef8f6b;
+    --accent-3: #6bd9c9;
+    --line: rgba(22,21,15,.14);
+    --card: rgba(255,255,255,.55);
+  }
+
+  @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #eee5d0;
-      --text: #28231c;
-      --accent: #a54529;
-      --subtle: #766b56;
-      --scanline: rgba(0,0,0,.09);
-      --glow: rgba(255,255,255,.32);
-      --texture-dark: rgba(40,35,28,.035);
-      --texture-light: rgba(40,35,28,.018);
-      --shadow: rgba(40,35,28,.12);
-      --buffer-bg: rgba(255,255,255,.12);
+      --bg-1: #0c0c0a;
+      --bg-2: #171612;
+      --text: #f3f1ea;
+      --muted: #a09c8f;
+      --accent-1: #9b8dfb;
+      --accent-2: #ff9d76;
+      --accent-3: #7fe6d4;
+      --line: rgba(243,241,234,.14);
+      --card: rgba(255,255,255,.05);
     }
+  }
 
-    /* Automatically switch to dark mode based on user's device/browser setting */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1b1916;
-        --text: #eee5d0;
-        --accent: #d06a45;
-        --subtle: #aaa08d;
-        --scanline: rgba(255,255,255,.08);
-        --glow: rgba(255,255,255,.05);
-        --texture-dark: rgba(255,255,255,.025);
-        --texture-light: rgba(255,255,255,.012);
-        --shadow: rgba(0,0,0,.3);
-        --buffer-bg: rgba(255,255,255,.05);
-      }
-    }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
 
-    * {
-      box-sizing: border-box;
-    }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    background: linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    place-items: center;
+    transition: background .4s ease, color .4s ease;
+  }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background:
-        radial-gradient(circle at 50% 45%, var(--glow), transparent 45%),
-        repeating-linear-gradient(0deg, var(--texture-dark) 0 1px, transparent 1px 5px),
-        repeating-linear-gradient(90deg, var(--texture-light) 0 1px, transparent 1px 7px),
-        var(--bg);
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      overflow: hidden;
-      position: relative;
-      transition: background .3s ease, color .3s ease;
-    }
+  /* custom cursor is enabled only on devices with a real pointer */
+  @media (hover: hover) and (pointer: fine) {
+    body { cursor: none; }
+    a, button { cursor: none; }
+  }
 
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 3px,
-        var(--scanline) 4px
-      );
-      opacity: .45;
-    }
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 50;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
 
-    .site-header {
-      position: fixed;
-      top: 22px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 12px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      z-index: 2;
-      animation: appear .8s ease both;
-    }
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-1);
+  }
 
-    .page {
-      width: min(760px, 100%);
-      text-align: center;
-      animation: appear .9s ease both;
-    }
+  .cursor-ring {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid var(--accent-1);
+    transition: width .2s ease, height .2s ease, border-color .2s ease, opacity .2s ease;
+    opacity: .7;
+  }
 
-    .label {
-      margin-bottom: 24px;
-      font-size: 11px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
+  .cursor-ring.hovering {
+    width: 50px;
+    height: 50px;
+    border-color: var(--accent-2);
+    opacity: .9;
+  }
 
-    h1 {
-      margin: 0 0 34px;
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(22px, 5vw, 42px);
-      line-height: 1.5;
-      text-transform: uppercase;
-      text-shadow: 3px 3px 0 var(--shadow);
-    }
+  /* soft animated gradient blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .4;
+    z-index: 0;
+    will-change: transform;
+  }
 
-    .loading {
-      padding: 10px 0;
-      font-family: 'DM Mono', monospace;
-      font-size: clamp(13px, 2vw, 16px);
-      letter-spacing: .08em;
-      white-space: nowrap;
-    }
+  .blob-1 {
+    width: 42vw; height: 42vw;
+    max-width: 460px; max-height: 460px;
+    background: var(--accent-1);
+    top: -10%; left: -8%;
+    animation: drift1 22s ease-in-out infinite;
+  }
 
-    .buffer {
-      display: inline-block;
-      width: min(430px, 82vw);
-      margin-top: 16px;
-      padding: 4px;
-      border: 2px solid var(--text);
-      background: var(--buffer-bg);
-      box-shadow: 5px 5px 0 var(--shadow);
-    }
+  .blob-2 {
+    width: 36vw; height: 36vw;
+    max-width: 400px; max-height: 400px;
+    background: var(--accent-2);
+    bottom: -12%; right: -6%;
+    animation: drift2 26s ease-in-out infinite;
+  }
 
-    .buffer-track {
-      height: 24px;
-      display: flex;
-      gap: 3px;
-      overflow: hidden;
-    }
+  .blob-3 {
+    width: 24vw; height: 24vw;
+    max-width: 300px; max-height: 300px;
+    background: var(--accent-3);
+    bottom: 8%; left: 6%;
+    animation: drift3 30s ease-in-out infinite;
+  }
 
-    .buffer-track span {
-      flex: 1;
-      min-width: 14px;
-      background: var(--accent);
-      opacity: .18;
-      animation: fill 1.6s steps(8) infinite;
-    }
+  .blob-4 {
+    width: 30vw; height: 30vw;
+    max-width: 340px; max-height: 340px;
+    background: color-mix(in srgb, var(--accent-2) 55%, var(--accent-1) 45%);
+    top: -8%; right: -8%;
+    animation: drift4 24s ease-in-out infinite;
+  }
 
-    .buffer-track span:nth-child(1) { animation-delay: .0s; }
-    .buffer-track span:nth-child(2) { animation-delay: .1s; }
-    .buffer-track span:nth-child(3) { animation-delay: .2s; }
-    .buffer-track span:nth-child(4) { animation-delay: .3s; }
-    .buffer-track span:nth-child(5) { animation-delay: .4s; }
-    .buffer-track span:nth-child(6) { animation-delay: .5s; }
-    .buffer-track span:nth-child(7) { animation-delay: .6s; }
-    .buffer-track span:nth-child(8) { animation-delay: .7s; }
-    .buffer-track span:nth-child(9) { animation-delay: .8s; }
-    .buffer-track span:nth-child(10) { animation-delay: .9s; }
+  @keyframes drift4 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(-5vw, 7vh) scale(1.1); }
+  }
 
-    .subtle {
-      margin-top: 16px;
-      color: var(--subtle);
-      font-size: 10px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
+  @keyframes drift1 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(6vw, 7vh) scale(1.1); }
+  }
+  @keyframes drift2 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(-6vw, -6vh) scale(1.08); }
+  }
+  @keyframes drift3 {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(5vw, -6vh) scale(1.12); }
+  }
 
-    .thanks {
-      margin: 28px auto 0;
-      max-width: 600px;
-      color: var(--text);
-      font-size: 12px;
-      line-height: 1.8;
-      letter-spacing: .04em;
-    }
+  .site-header {
+    position: fixed;
+    top: 32px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 3;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    animation: fadeDown .8s ease both;
+  }
 
-    .site-footer {
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      font-size: 10px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      z-index: 2;
-      animation: appear 1s .2s ease both;
-    }
+  .site-header .name-wrap {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 8px;
+    background: linear-gradient(90deg,
+      var(--text) 0%, var(--text) 30%,
+      var(--accent-1) 45%, var(--accent-2) 55%, var(--accent-3) 65%,
+      var(--text) 80%, var(--text) 100%);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: sheen 5s linear infinite;
+  }
 
-    .site-footer a {
-      color: var(--text);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .2s ease, border-color .2s ease;
-    }
+  .site-header .name-wrap::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 30px;
+    height: 1px;
+    transform: translateX(-50%);
+    background: rgba(150,148,138,.5);
+  }
 
-    .site-footer a:hover {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
+  main.page {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 100%);
+    text-align: center;
+    padding: 0 24px;
+    animation: fadeUp .9s .1s ease both;
+  }
 
-    @keyframes fill {
-      0%, 20% {
-        opacity: .18;
-        transform: scaleY(.7);
-      }
+  .badge {
+    display: inline-block;
+    margin-bottom: 24px;
+    padding: 7px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+    backdrop-filter: blur(8px);
+  }
 
-      40%, 100% {
-        opacity: 1;
-        transform: scaleY(1);
-      }
-    }
+  h1 {
+    margin: 0 0 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 4.2vw, 34px);
+    line-height: 1.35;
+  }
 
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
+  .subtitle {
+    max-width: 40ch;
+    margin: 0 auto;
+    font-size: clamp(14px, 1.8vw, 16px);
+    line-height: 1.8;
+    color: var(--muted);
+  }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+  .site-footer {
+    position: fixed;
+    bottom: 34px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 26px;
+    z-index: 3;
+    animation: fadeUp 1s .2s ease both;
+  }
 
-    @media (max-width: 520px) {
-      h1 {
-        font-size: 21px;
-      }
+  .site-footer a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--card);
+    backdrop-filter: blur(8px);
+    color: var(--muted);
+    transition: transform .25s ease, border-color .25s ease, color .25s ease;
+  }
 
-      .buffer {
-        width: 86vw;
-      }
+  .site-footer a:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-1);
+    color: var(--accent-1);
+  }
 
-      .site-header {
-        font-size: 10px;
-      }
+  .site-footer svg {
+    width: 17px;
+    height: 17px;
+  }
 
-      .site-footer {
-        font-size: 9px;
-        gap: 7px;
-      }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-      .thanks {
-        font-size: 10px;
-        line-height: 1.7;
-      }
-    }
-  </style>
+  @keyframes sheen {
+    0% { background-position: 200% center; }
+    100% { background-position: -100% center; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob { animation: none; }
+    .site-header .name-wrap { animation: none; }
+  }
+
+  @media (max-width: 640px) {
+    .site-header { top: 24px; font-size: 12px; }
+    .site-footer { bottom: 24px; gap: 18px; }
+    main.page { padding: 0 20px; }
+  }
+
+  @media (max-width: 380px) {
+    .site-footer { gap: 14px; }
+    .site-footer a { width: 36px; height: 36px; }
+  }
+</style>
 </head>
 
 <body>
-  <header class="site-header">Sharad Verma</header>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <header class="site-header"><span class="name-wrap">Sharad Verma</span></header>
 
   <main class="page">
-    <div class="label">Portfolio</div>
-
-    <h1>Work In Progress</h1>
-
-    <div class="loading">
-      <div>LOADING</div>
-
-      <div class="buffer" aria-label="Loading">
-        <div class="buffer-track">
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="subtle">Please wait...</div>
-
-    <div class="thanks">
-      Thank you for visiting and showing interest in my portfolio.<br />
-      The website is currently under development and will launch soon.<br />
-      See you soon!
-    </div>
+    <div class="badge">Portfolio</div>
+    <h1>This website is under construction.</h1>
+    <p class="subtitle">
+      Thank you for visiting. It will be live soon.
+    </p>
   </main>
 
   <footer class="site-footer">
-    <a href="https://www.linkedin.com/in/sharadverma638" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <span>·</span>
-    <a href="https://github.com/sharadverma638" target="_blank" rel="noopener noreferrer">GitHub</a>
-    <span>·</span>
-    <a href="mailto:sharadverma638@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/sharadverma638" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.11 20.45H3.56V9h3.55v11.45z"/></svg>
+    </a>
+    <a href="https://github.com/sharadverma638" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.36-3.37-1.36-.46-1.2-1.11-1.52-1.11-1.52-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5.01 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+    </a>
+    <a href="mailto:sharadverma638@gmail.com" aria-label="Email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>
+    </a>
   </footer>
+
+  <script>
+    (function () {
+      var dot = document.getElementById('cursorDot');
+      var ring = document.getElementById('cursorRing');
+      if (!dot || !ring) return;
+      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+      var ringX = 0, ringY = 0, mouseX = 0, mouseY = 0;
+
+      window.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.left = mouseX + 'px';
+        dot.style.top = mouseY + 'px';
+      }, { passive: true });
+
+      function animateRing() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      document.querySelectorAll('a').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { ring.classList.add('hovering'); });
+        el.addEventListener('mouseleave', function () { ring.classList.remove('hovering'); });
+      });
+    })();
+  </script>
 </body>
 </html>

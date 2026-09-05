@@ -5,8 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Sharad Verma — Portfolio, under construction." />
 <title>Sharad Verma — Portfolio</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/x-icon" href="favicon.ico" />
 
+<script>
+  // Detect a real mouse/trackpad up front, before paint, so touch devices
+  // never get the custom cursor markup rendered visible.
+  (function () {
+    try {
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        document.documentElement.classList.add('has-cursor');
+      }
+    } catch (e) {}
+  })();
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=Fraunces:ital,wght@1,500&display=swap');
 
@@ -20,6 +31,10 @@
     --accent-3: #6bd9c9;
     --line: rgba(22,21,15,.14);
     --card: rgba(255,255,255,.55);
+    --blob-1: #d6c2f2;
+    --blob-2: #ffc7b6;
+    --blob-3: #b7ecd9;
+    --blob-4: #ffe1a6;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -33,6 +48,10 @@
       --accent-3: #7fe6d4;
       --line: rgba(243,241,234,.14);
       --card: rgba(255,255,255,.05);
+      --blob-1: #a98cf0;
+      --blob-2: #ff9c82;
+      --blob-3: #74e0c4;
+      --blob-4: #ffcf66;
     }
   }
 
@@ -53,102 +72,164 @@
     transition: background .4s ease, color .4s ease;
   }
 
-  /* custom cursor is enabled only on devices with a real pointer */
-  @media (hover: hover) and (pointer: fine) {
-    body { cursor: none; }
-    a, button { cursor: none; }
+  /* custom cursor — only ever shown when JS confirms a real mouse/trackpad */
+  html.has-cursor body,
+  html.has-cursor a,
+  html.has-cursor button {
+    cursor: none;
   }
 
-  .cursor-dot,
+  .wash {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-1) 96%);
+    opacity: .22;
+  }
+
+  .cursor-ring,
+  .cursor-core {
+    display: none;
+  }
+
+  html.has-cursor .cursor-ring,
+  html.has-cursor .cursor-core {
+    display: block;
+  }
+
+  .cursor-core {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 51;
+  }
+
   .cursor-ring {
     position: fixed;
     top: 0;
     left: 0;
+    width: 30px;
+    height: 30px;
+    margin-left: -15px;
+    margin-top: -15px;
+    border-radius: 50%;
+    border: 1px solid var(--muted);
     pointer-events: none;
     z-index: 50;
+    transition: width .3s ease, height .3s ease, margin .3s ease, border-color .3s ease, opacity .3s ease;
+    opacity: .55;
+  }
+
+  .cursor-ring::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    margin-left: -1.5px;
     border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .cursor-dot {
-    width: 6px;
-    height: 6px;
     background: var(--accent-1);
-  }
-
-  .cursor-ring {
-    width: 32px;
-    height: 32px;
-    border: 1.5px solid var(--accent-1);
-    transition: width .2s ease, height .2s ease, border-color .2s ease, opacity .2s ease;
-    opacity: .7;
+    animation: orbitTick 3.5s linear infinite;
+    transform-origin: 1.5px 17px;
   }
 
   .cursor-ring.hovering {
-    width: 50px;
-    height: 50px;
-    border-color: var(--accent-2);
-    opacity: .9;
+    width: 48px;
+    height: 48px;
+    margin-left: -24px;
+    margin-top: -24px;
+    border-color: var(--accent-1);
+    opacity: .85;
+  }
+
+  .cursor-ring.hovering::after {
+    animation-duration: 1.2s;
+    transform-origin: 1.5px 26px;
+  }
+
+  @keyframes orbitTick {
+    to { transform: rotate(360deg); }
   }
 
   /* soft animated gradient blobs */
   .blob {
     position: fixed;
     border-radius: 50%;
-    filter: blur(70px);
-    opacity: .4;
+    filter: blur(75px);
+    opacity: .42;
+    mix-blend-mode: normal;
     z-index: 0;
     will-change: transform;
   }
 
   .blob-1 {
-    width: 42vw; height: 42vw;
-    max-width: 460px; max-height: 460px;
-    background: var(--accent-1);
-    top: -10%; left: -8%;
-    animation: drift1 22s ease-in-out infinite;
+    width: clamp(280px, 40vw, 480px);
+    height: clamp(280px, 40vw, 480px);
+    background: var(--blob-1);
+    top: -12%; left: -10%;
+    animation: drift1 26s ease-in-out infinite;
   }
 
   .blob-2 {
-    width: 36vw; height: 36vw;
-    max-width: 400px; max-height: 400px;
-    background: var(--accent-2);
-    bottom: -12%; right: -6%;
-    animation: drift2 26s ease-in-out infinite;
+    width: clamp(260px, 36vw, 440px);
+    height: clamp(260px, 36vw, 440px);
+    background: var(--blob-2);
+    bottom: -14%; right: -8%;
+    animation: drift2 30s ease-in-out infinite;
   }
 
   .blob-3 {
-    width: 24vw; height: 24vw;
-    max-width: 300px; max-height: 300px;
-    background: var(--accent-3);
-    bottom: 8%; left: 6%;
-    animation: drift3 30s ease-in-out infinite;
+    width: clamp(200px, 26vw, 340px);
+    height: clamp(200px, 26vw, 340px);
+    background: var(--blob-3);
+    bottom: 4%; left: 2%;
+    animation: drift3 33s ease-in-out infinite;
   }
 
   .blob-4 {
-    width: 30vw; height: 30vw;
-    max-width: 340px; max-height: 340px;
-    background: color-mix(in srgb, var(--accent-2) 55%, var(--accent-1) 45%);
-    top: -8%; right: -8%;
-    animation: drift4 24s ease-in-out infinite;
-  }
-
-  @keyframes drift4 {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(-5vw, 7vh) scale(1.1); }
+    width: clamp(220px, 30vw, 380px);
+    height: clamp(220px, 30vw, 380px);
+    background: var(--blob-4);
+    top: -10%; right: -10%;
+    animation: drift4 28s ease-in-out infinite;
   }
 
   @keyframes drift1 {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(6vw, 7vh) scale(1.1); }
+    0%   { transform: translate(0, 0) scale(1); }
+    25%  { transform: translate(20vw, 14vh) scale(1.12); }
+    50%  { transform: translate(34vw, 30vh) scale(1.2); }
+    75%  { transform: translate(14vw, 32vh) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
   }
+
   @keyframes drift2 {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(-6vw, -6vh) scale(1.08); }
+    0%   { transform: translate(0, 0) scale(1); }
+    25%  { transform: translate(-18vw, -16vh) scale(1.1); }
+    50%  { transform: translate(-32vw, -28vh) scale(1.18); }
+    75%  { transform: translate(-12vw, -30vh) scale(1.04); }
+    100% { transform: translate(0, 0) scale(1); }
   }
+
   @keyframes drift3 {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(5vw, -6vh) scale(1.12); }
+    0%   { transform: translate(0, 0) scale(1); }
+    30%  { transform: translate(16vw, -18vh) scale(1.14); }
+    60%  { transform: translate(26vw, -8vh) scale(1.2); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+
+  @keyframes drift4 {
+    0%   { transform: translate(0, 0) scale(1); }
+    30%  { transform: translate(-16vw, 20vh) scale(1.12); }
+    60%  { transform: translate(-28vw, 10vh) scale(1.2); }
+    100% { transform: translate(0, 0) scale(1); }
   }
 
   .site-header {
@@ -201,6 +282,12 @@
     animation: fadeUp .9s .1s ease both;
   }
 
+  .tilt {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translate(0, 0);
+    transition: transform .25s ease-out;
+    will-change: transform;
+  }
+
   .badge {
     display: inline-block;
     margin-bottom: 24px;
@@ -246,6 +333,7 @@
   }
 
   .site-footer a {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -256,13 +344,42 @@
     background: var(--card);
     backdrop-filter: blur(8px);
     color: var(--muted);
-    transition: transform .25s ease, border-color .25s ease, color .25s ease;
+    overflow: hidden;
+    transition: transform .3s ease, border-color .3s ease, color .3s ease;
+  }
+
+  .site-footer a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg,
+      color-mix(in srgb, var(--accent-2) 32%, white 68%),
+      color-mix(in srgb, var(--accent-3) 32%, white 68%));
+    opacity: .8;
+    transform: scale(0);
+    transition: transform .35s ease;
+    z-index: 0;
+  }
+
+  .site-footer a svg {
+    position: relative;
+    z-index: 1;
+    transition: transform .35s ease;
   }
 
   .site-footer a:hover {
     transform: translateY(-3px);
-    border-color: var(--accent-1);
-    color: var(--accent-1);
+    border-color: transparent;
+    color: #1c1a15;
+  }
+
+  .site-footer a:hover::before {
+    transform: scale(1);
+  }
+
+  .site-footer a:hover svg {
+    transform: scale(1.12) rotate(-6deg);
   }
 
   .site-footer svg {
@@ -308,18 +425,21 @@
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
   <div class="blob blob-4"></div>
+  <div class="wash"></div>
 
   <div class="cursor-ring" id="cursorRing"></div>
-  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-core" id="cursorCore"></div>
 
   <header class="site-header"><span class="name-wrap">Sharad Verma</span></header>
 
   <main class="page">
-    <div class="badge">Portfolio</div>
-    <h1>This website is under construction.</h1>
-    <p class="subtitle">
-      Thank you for visiting. It will be live soon.
-    </p>
+    <div class="tilt" id="tiltWrap">
+      <div class="badge">Portfolio</div>
+      <h1>This website is under construction.</h1>
+      <p class="subtitle">
+        Thank you for visiting. It will be live soon.
+      </p>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -336,32 +456,61 @@
 
   <script>
     (function () {
-      var dot = document.getElementById('cursorDot');
-      var ring = document.getElementById('cursorRing');
-      if (!dot || !ring) return;
-      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      var hasCursor = document.documentElement.classList.contains('has-cursor');
+      if (!hasCursor) return; // touch devices: skip entirely, nothing to break
 
-      var ringX = 0, ringY = 0, mouseX = 0, mouseY = 0;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var core = document.getElementById('cursorCore');
+      var ring = document.getElementById('cursorRing');
+      var page = document.getElementById('tiltWrap');
+
+      var mouseX = window.innerWidth / 2;
+      var mouseY = window.innerHeight / 2;
+      var ringX = mouseX, ringY = mouseY;
 
       window.addEventListener('mousemove', function (e) {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        dot.style.left = mouseX + 'px';
-        dot.style.top = mouseY + 'px';
+
+        if (core) {
+          core.style.left = mouseX + 'px';
+          core.style.top = mouseY + 'px';
+        }
+
+        if (page && !reduceMotion) {
+          var relX = (mouseX / window.innerWidth) - 0.5;   // -0.5 .. 0.5
+          var relY = (mouseY / window.innerHeight) - 0.5;
+          var maxTilt = 7;   // degrees — stronger, more noticeable tilt
+          var maxShift = 12; // px
+          page.style.transform =
+            'perspective(1000px) ' +
+            'rotateX(' + (-relY * maxTilt) + 'deg) ' +
+            'rotateY(' + (relX * maxTilt) + 'deg) ' +
+            'translate(' + (relX * maxShift) + 'px, ' + (relY * maxShift) + 'px)';
+        }
       }, { passive: true });
 
+      window.addEventListener('mouseleave', function () {
+        if (page) {
+          page.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate(0,0)';
+        }
+      });
+
       function animateRing() {
-        ringX += (mouseX - ringX) * 0.18;
-        ringY += (mouseY - ringY) * 0.18;
-        ring.style.left = ringX + 'px';
-        ring.style.top = ringY + 'px';
+        ringX += (mouseX - ringX) * 0.16;
+        ringY += (mouseY - ringY) * 0.16;
+        if (ring) {
+          ring.style.left = ringX + 'px';
+          ring.style.top = ringY + 'px';
+        }
         requestAnimationFrame(animateRing);
       }
       animateRing();
 
       document.querySelectorAll('a').forEach(function (el) {
-        el.addEventListener('mouseenter', function () { ring.classList.add('hovering'); });
-        el.addEventListener('mouseleave', function () { ring.classList.remove('hovering'); });
+        el.addEventListener('mouseenter', function () { ring && ring.classList.add('hovering'); });
+        el.addEventListener('mouseleave', function () { ring && ring.classList.remove('hovering'); });
       });
     })();
   </script>

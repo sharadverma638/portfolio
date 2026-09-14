@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Page not found - Sharad Verma's portfolio." />
+<title>404 - Page Not Found | Sharad Verma</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="stylesheet" href="style.css">
+
+<script>
+  (function () {
+    try {
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        document.documentElement.classList.add('has-cursor');
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  .error-code {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(56px, 12vw, 96px);
+    line-height: 1;
+    margin: 0 0 8px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .home-link {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 10px 22px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+    backdrop-filter: blur(8px);
+    transition: transform .3s ease, border-color .3s ease;
+  }
+
+  .home-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-1);
+  }
+</style>
+</head>
+
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  <div class="wash"></div>
+
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-core" id="cursorCore"></div>
+
+  <header class="site-header"><span class="name-wrap">Sharad Verma</span></header>
+
+  <main class="page">
+    <div class="tilt" id="tiltWrap">
+      <div class="badge">Error</div>
+      <p class="error-code">404</p>
+      <h1>This page doesn't exist.</h1>
+      <p class="subtitle">
+        The page you're looking for may have been moved or removed.
+      </p>
+      <a class="home-link" href="https://sharadverma638.github.io/portfolio/">Back to home</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <a href="https://sharadverma.carrd.co/" target="_blank" rel="noopener noreferrer" aria-label="Website">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.6 3.8 5.8 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.8-3.8-9s1.3-6.4 3.8-9z"/></svg>
+    </a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
